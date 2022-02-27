@@ -2,7 +2,7 @@
 name = "{{ project_name }}"
 version = "0.1.0"
 authors = ["Amy Keibler <amelia.keibler@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "{{ project_description }}"
 
 {% if license == "mit-plus-apache-2" -%}
@@ -12,3 +12,10 @@ license-file = "LICENSE"
 {%- endif %}
 
 [dependencies]
+
+
+{% if add_bom -%}
+[package.metadata.cyclonedx]
+included_dependencies = "all"
+format = "json"
+{%- endif %}

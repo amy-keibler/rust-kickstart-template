@@ -15,6 +15,7 @@
       packages.{{ project_name }} = naersk-lib.buildPackage {
         pname = "{{ project_name }}";
         root = ./.;
+        doCheck = true;
       };
       defaultPackage = packages.{{ project_name }};
 

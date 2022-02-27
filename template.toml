@@ -38,3 +38,8 @@ choices = [
         "be-gay-do-crime",
         "mit-plus-apache-2"
 ]
+
+[[variables]]
+name = "add_sbom"
+default = true
+prompt = "Add CycloneDX SBOM Defaults to Cargo.toml"
