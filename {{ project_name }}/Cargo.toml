@@ -14,7 +14,7 @@ license-file = "LICENSE"
 [dependencies]
 
 
-{% if add_bom -%}
+{% if add_sbom -%}
 [package.metadata.cyclonedx]
 included_dependencies = "all"
 format = "json"

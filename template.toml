@@ -17,6 +17,7 @@ cleanup = [
         { name = "has_mocks", value = false, paths = [
         "{{ project_name }}/test/Mock",
         ] },
+        { name = "include_github_actions_ci", value = false, paths = ["{{ project_name }}/.github"]},
 ]
 
 [[variables]]
@@ -38,6 +39,11 @@ choices = [
         "be-gay-do-crime",
         "mit-plus-apache-2"
 ]
+
+[[variables]]
+name = "include_github_actions_ci"
+default = true
+prompt = "Add Nix Flake CI GitHub Actions?"
 
 [[variables]]
 name = "add_sbom"

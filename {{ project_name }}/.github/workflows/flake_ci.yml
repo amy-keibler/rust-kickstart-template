@@ -1,0 +1,22 @@
+name: "Nix Flake CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  tests:
+    name: Nix Flake Build & Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.4.0
+    - uses: cachix/install-nix-action@v15
+      with:
+        extra_nix_config: |
+{%- raw%}
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+{%- endraw %}
+    - run: nix build
+    - run: nix flake check
