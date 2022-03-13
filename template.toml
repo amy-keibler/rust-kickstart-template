@@ -9,14 +9,14 @@ ignore = [
 ]
 
 cleanup = [
+        { name = "application_type", value = "empty", paths = [
+        "{{ project_name }}/src/cli.rs",
+        ] },
         { name = "license", value = "be-gay-do-crime", paths = [
         "{{ project_name }}/LICENSE-MIT",
         "{{ project_name }}/LICENSE-APACHE",
         ] },
         { name = "license", value = "mit-plus-apache-2", paths = ["{{ project_name }}/LICENSE"] },
-        { name = "has_mocks", value = false, paths = [
-        "{{ project_name }}/test/Mock",
-        ] },
         { name = "include_github_actions_ci", value = false, paths = ["{{ project_name }}/.github"]},
 ]
 
@@ -32,12 +32,21 @@ default = "TODO: Add Description"
 prompt = "Describe the purpose of the application."
 
 [[variables]]
+name = "application_type"
+default = "empty"
+prompt = "What type of application is this project?"
+choices = [
+        "empty",
+        "cli",
+]
+
+[[variables]]
 name = "license"
 default = "be-gay-do-crime"
 prompt = "What should the license be?"
 choices = [
         "be-gay-do-crime",
-        "mit-plus-apache-2"
+        "mit-plus-apache-2",
 ]
 
 [[variables]]
