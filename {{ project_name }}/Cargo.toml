@@ -13,12 +13,12 @@ license-file = "LICENSE"
 [dependencies]
 {%- if application_type == "empty" -%}
 {%- elif application_type == "cli" %}
-clap = { version = "3.1.6", features = ["derive"]}
+clap = { version = "4.2.2", features = ["derive"]}
 color-eyre = "0.6.1"
-directories = "4.0.1"
+directories = "5.0.0"
 eyre = "0.6.7"
+knuffel = "3.2.0"
 serde = { version = "1.0.136", features = ["derive"] }
-toml = "0.5.8"
 tracing = "0.1.32"
 tracing-subscriber = { version = "0.3.9", features = ["env-filter"] }
 {%- endif %}
