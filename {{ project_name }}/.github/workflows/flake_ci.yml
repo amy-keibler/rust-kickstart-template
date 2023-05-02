@@ -11,8 +11,8 @@ jobs:
     name: Nix Flake Build & Check
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.4.0
-    - uses: cachix/install-nix-action@v15
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
       with:
         extra_nix_config: |
 {%- raw%}
