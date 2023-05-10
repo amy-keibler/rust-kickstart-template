@@ -2,8 +2,14 @@
   description = "{{ project_description }}";
 
   inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     utils.url = "github:numtide/flake-utils";
-    naersk.url = "github:nmattia/naersk";
+    naersk = {
+      url = "github:nmattia/naersk";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
   };
 
   outputs = { self, nixpkgs, utils, naersk }:
@@ -11,23 +17,20 @@
       pkgs = nixpkgs.legacyPackages."${system}";
       naersk-lib = naersk.lib."${system}";
     in rec {
-      # `nix build`
       packages.{{ project_name }} = naersk-lib.buildPackage {
         pname = "{{ project_name }}";
         root = ./.;
         doCheck = true;
       };
-      defaultPackage = packages.{{ project_name }};
+      packages.default = packages.{{ project_name }};
 
-      # `nix run`
       apps.{{ project_name }} = utils.lib.mkApp {
         drv = packages.{{ project_name }};
         exePath = "/bin/{{ project_name }}";
       };
-      defaultApp = apps.{{ project_name }};
+      apps.default = apps.{{ project_name }};
 
-      # `nix develop`
-      devShell = pkgs.mkShell {
+      devShells.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [
           cargo
           cargo-edit
