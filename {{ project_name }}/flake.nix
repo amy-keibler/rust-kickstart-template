@@ -3,45 +3,94 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    utils.url = "github:numtide/flake-utils";
-    naersk = {
-      url = "github:nmattia/naersk";
+    flake-utils.url = "github:numtide/flake-utils";
+
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
       inputs = {
         nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
       };
     };
   };
 
-  outputs = { self, nixpkgs, utils, naersk }:
-    utils.lib.eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages."${system}";
-      naersk-lib = naersk.lib."${system}";
-    in rec {
-      packages.{{ project_name }} = naersk-lib.buildPackage {
-        pname = "{{ project_name }}";
-        root = ./.;
-        doCheck = true;
-      };
-      packages.default = packages.{{ project_name }};
+  outputs = { self, nixpkgs, flake-utils, crane, rust-overlay, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import rust-overlay) ];
+        };
 
-      apps.{{ project_name }} = utils.lib.mkApp {
-        drv = packages.{{ project_name }};
-        exePath = "/bin/{{ project_name }}";
-      };
-      apps.default = apps.{{ project_name }};
+        rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+          extensions = [ "rust-analyzer" "rust-src" ];
+        };
 
-      devShells.default = pkgs.mkShell {
-        nativeBuildInputs = with pkgs; [
-          cargo
-          cargo-edit
-          cargo-outdated
-          clippy
-          rustc
-          rustfmt
-          rust-analyzer
-        ];
+        craneLib = (crane.mkLib pkgs).overrideToolchain rustToolchain;
 
-        RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
-      };
-    });
+        src = craneLib.cleanCargoSource (craneLib.path ./.);
+
+        commonArgs = {
+          inherit src;
+
+          # uncomment if the project is a workspace
+          # pname = "{{ project_name }}";
+          # version = "0.1.0";
+        };
+
+        cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+        {{ project_name }} = craneLib.buildPackage (commonArgs // {
+          inherit cargoArtifacts;
+        });
+      in
+      rec {
+        checks = {
+          inherit {{ project_name }};
+
+          clippy = craneLib.cargoClippy (commonArgs // {
+            inherit cargoArtifacts;
+          });
+
+          doc = craneLib.cargoDoc (commonArgs // {
+            inherit cargoArtifacts;
+          });
+
+          fmt = craneLib.cargoFmt (commonArgs // {
+            inherit src;
+          });
+        };
+
+        packages.{{ project_name }} = {{ project_name }};
+        packages.default = packages.{{ project_name }};
+
+        # uncomment if there is a binary to be run
+        # apps.cargo-cyclonedx = flake-utils.lib.mkApp {
+        #   drv = packages.{{ project_name }};
+        #   name = "{{ project_name }}";
+        # };
+        # apps.default = apps.cargo-cyclonedx;
+
+        devShells.default = pkgs.mkShell {
+          inputsFrom = builtins.attrValues self.checks.${system};
+
+          packages = with pkgs; [
+            rustToolchain
+            cargo-edit
+            cargo-msrv
+            cargo-outdated
+
+            # GitHub tooling
+            gh
+
+            # Nix tooling
+            nixpkgs-fmt
+          ];
+        };
+      });
 }
