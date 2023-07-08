@@ -70,11 +70,11 @@
         packages.default = packages.{{ project_name }};
 
         # uncomment if there is a binary to be run
-        # apps.cargo-cyclonedx = flake-utils.lib.mkApp {
+        # apps.{{ project_name }} = flake-utils.lib.mkApp {
         #   drv = packages.{{ project_name }};
         #   name = "{{ project_name }}";
         # };
-        # apps.default = apps.cargo-cyclonedx;
+        # apps.default = apps.{{ project_name }};
 
         devShells.default = pkgs.mkShell {
           inputsFrom = builtins.attrValues self.checks.${system};
