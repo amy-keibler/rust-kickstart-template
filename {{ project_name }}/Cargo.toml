@@ -20,7 +20,7 @@ eyre = "0.6.7"
 knuffel = "3.2.0"
 serde = { version = "1.0.136", features = ["derive"] }
 tracing = "0.1.32"
-tracing-subscriber = { version = "0.3.9", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.9", features = ["env-filter", "fmt"] }
 {%- endif %}
 
 {% if add_sbom -%}
