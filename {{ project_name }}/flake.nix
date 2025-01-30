@@ -53,6 +53,12 @@
         checks = {
           inherit {{ project_name }};
 
+          nextest = craneLib.cargoNextest (commonArgs // {
+            inherit cargoArtifacts;
+            partitions = 1;
+            partitionType = "count";
+          });
+
           clippy = craneLib.cargoClippy (commonArgs // {
             inherit cargoArtifacts;
           });
@@ -84,6 +90,9 @@
             cargo-edit
             cargo-msrv
             cargo-outdated
+
+            # Orchestration
+            just
 
             # GitHub tooling
             gh
