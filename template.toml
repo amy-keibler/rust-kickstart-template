@@ -53,8 +53,3 @@ choices = [
 name = "include_github_actions_ci"
 default = true
 prompt = "Add Nix Flake CI GitHub Actions?"
-
-[[variables]]
-name = "add_sbom"
-default = true
-prompt = "Add CycloneDX SBOM Defaults to Cargo.toml"

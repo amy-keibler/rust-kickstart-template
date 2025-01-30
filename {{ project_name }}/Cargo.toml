@@ -13,19 +13,12 @@ license-file = "LICENSE"
 [dependencies]
 {%- if application_type == "empty" -%}
 {%- elif application_type == "cli" %}
-clap = { version = "4.2.2", features = ["derive"]}
-color-eyre = "0.6.1"
-directories = "5.0.0"
-eyre = "0.6.7"
+clap = { version = "4.5.27", features = ["derive"]}
+color-eyre = "0.6.3"
+directories = "6.0.0"
+eyre = "0.6.12"
 knuffel = "3.2.0"
-serde = { version = "1.0.136", features = ["derive"] }
-tracing = "0.1.32"
-tracing-subscriber = { version = "0.3.9", features = ["env-filter", "fmt"] }
-{%- endif %}
-
-{% if add_sbom -%}
-[package.metadata.cyclonedx]
-format = "json"
-included_dependencies = "all"
-output_options = { cdx = true, pattern = "package" }
+serde = { version = "1.0.217", features = ["derive"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "fmt"] }
 {%- endif %}

@@ -1,0 +1,13 @@
+default:
+  @just --list
+
+# Run the CI tests locally
+ci:
+  @echo 'Run the test suite'
+  cargo nextest run --profile ci
+
+  @echo 'Check formatting'
+  cargo fmt --check
+
+  @echo 'Check Clippy'
+  cargo clippy
