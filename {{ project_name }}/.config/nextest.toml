@@ -1,0 +1,6 @@
+[profile.ci]
+retries = 2
+fail-fast = false
+
+[profile.ci.junit]
+path = "report.xml"

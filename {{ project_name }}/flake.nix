@@ -98,7 +98,7 @@
             gh
 
             # Nix tooling
-            nixpkgs-fmt
+            nixfmt-rfc-style
           ];
         };
       });

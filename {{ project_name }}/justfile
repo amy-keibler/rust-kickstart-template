@@ -11,3 +11,11 @@ ci:
 
   @echo 'Check Clippy'
   cargo clippy
+
+  @echo 'Checking Nix'
+  nixpkgs-fmt --check **.nix
+
+# Format all nix files
+nix-fmt:
+  nixpkgs-fmt **.nix
+    
